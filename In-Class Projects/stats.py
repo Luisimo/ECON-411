@@ -1,3 +1,5 @@
+import pandas as pd
+
 def total(list_obj):
     total = 0
     n = len(list_obj)
@@ -131,3 +133,17 @@ def kurtosis(list_obj, sample = False):
     ( (n - 1) * (n - 2) *(n - 3) * (SD_ ** 4)) - (3 *(n - 1) ** 2) / ((n - 2) * (n - 3))
     
     return kurt
+
+def gather_statistics(df, sample = False, round_dig = 3):
+    dct = {key:{} for key in df}
+    for key, val in df.items():
+        val.dropna(inplace = True)
+        dct[key]["mean"] = round(mean(val), round_dig)
+        dct[key]["median"] = round(median(val), round_dig)
+        dct[key]["variance"] = round(variance(val), round_dig)
+        dct[key]["S.D."] = round(SD(val, sample), round_dig)
+        dct[key]["Skewness"] = round(skewness(val, sample), round_dig)
+        dct[key]["Kurtosis"] = round(kurtosis(val, sample), round_dig)
+    stats_df = pd.DataFrame(dct)
+    
+    return stats_df
