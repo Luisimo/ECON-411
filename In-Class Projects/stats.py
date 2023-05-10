@@ -147,3 +147,17 @@ def gather_statistics(df, sample = False, round_dig = 3):
     stats_df = pd.DataFrame(dct)
     
     return stats_df
+
+def gather_data(data_codes,
+               start,end = datetime.datetime.today(),
+               freq = "M"):
+    df_init = False
+    for key, code in data_codes.items():
+        if df_init == False:
+            df = web.DataReader(code, "fred", start, end).resample(freq).mean() 
+            df.rename(columns = {code:key}, inplace = True)
+            df_init = True
+        else:
+            df[key] = web.DataReader(code, "fred", start, end).resample(freq).mean()
+            
+    return df
